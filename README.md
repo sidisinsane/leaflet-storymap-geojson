@@ -15,6 +15,6 @@ Remove button that closes sidebar, but keep template intact
 ## Code credits
 Adapted from and inspired by
 - http://maps.edbuild.org/DividingLines.html
-- https://github.com/andrewbtran/dunkin_starbucks
+- https://github.com/andrewbtran/dunkin_starbucks -- see https://www.bostonglobe.com/business/2014/08/25/dunkin-expands-into-california-market-dominated-starbucks/Q1cdxOhAVlOXsJXWuF5F6H/igraphic.html
 - http://github.com/CartoDB/Odyssey.js
 - https://github.com/clhenrick/BushwickCommunityMap

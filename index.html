@@ -16,21 +16,11 @@
 </head>
 <body>
 
-<div id="banner">
-  <h4>Leaflet StoryMap template: see <a href="http://github.com/jackdougherty/leaflet-storymap/">code on GitHub and credit to EdBuild.org</a></h4>
-  <div id="buttoncontainer" class="active">
-    <button id="slide_button" class="active">Restart Story</button>
-  </div>
-</div>
 
 <div id="map"></div>
 
 <div id="markerinfo">
-    <!-- If sidebar closed, restart story on hosted site - ADD YOUR OWN LINK -->
-    <div id="sidebarbuttoncontainer">
-        <a href="http://jackdougherty.github.com/leaflet-storymap/index.html" id="sidebarbutton" title="Close sidebar">X</a>
-    </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://jackdougherty.github.com/leaflet-storymap/index.html" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="index.html" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
@@ -50,28 +40,8 @@
   map.attributionControl
   .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-storymap">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
-  /** Sidebar control **/
-  var sidebarbutton = document.getElementById('sidebarbutton');
-  var body = document.getElementById('storybody');
-  sidebarbutton.onclick = function() {
-      body.className = 'nosidebar';
-      buttoncontainer.className = '';
-      if(mapLayers[0]) {
-            map.removeLayer(mapLayers[0]);
-            mapLayers.splice(0,1);
-          }
-  }
-  /** End of sidebar control **/
-
   //Array to hold the layers for each slide in the story
   var mapLayers = new Array();
-
-  //Used to restart the story if user closes the sidebar
-  slide_button.onclick = function() {
-    slide_button.className = 'active';
-    buttoncontainer.className = 'active';
-    startStory(allSlides, 0, 5)
-  }
 
   // This keeps track of our progress through the story.
   var storyProgress = new Object();
@@ -160,9 +130,6 @@
       }
 
       document.getElementById('markerinfo2').innerHTML = info;
-          // Re-open the sidebar if it's hidden
-          // FIX LATER - Uncaught TypeError: Cannot set property 'classname' of null
-      body.className = '';
   }
 
   // Next - get the progress from storyProgress, update the current value, and update the display.
@@ -212,12 +179,8 @@
   var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
   var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
-  // Create an entry for each slide
+  // Create an entry for each slide, and range must match slides (e.g. 0, 5)
   var allSlides = [slide0, slide1, slide2, slide3, slide4, slide5];
-
-  // The numbers below must correspond to your range of slides (0 to 5, etc.)
-  slide_button.className = 'active';
-  buttoncontainer.className = 'active';
   startStory(allSlides, 0, 5)
 
   </script>
