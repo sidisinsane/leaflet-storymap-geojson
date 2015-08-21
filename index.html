@@ -17,9 +17,7 @@
 <body>
 
 <div id="banner">
-  <!-- <a href="http://www.edbuild.org/"><img style="vertical-align:top" src="logo_inverse_262x160.png" id="logo"></a> -->
-  <h4>Leaflet StoryMap template: see <a href="http://github.com/jackdougherty/leaflet-storymap">code on GitHub and credit to EdBuild.org</a></h4>
-  <!-- <a href="http://edbuild.org/blog/" id="blog_button">Blog</a> -->
+  <h4>Leaflet StoryMap template: see <a href="http://github.com/jackdougherty/leaflet-storymap/">code on GitHub and credit to EdBuild.org</a></h4>
   <div id="buttoncontainer" class="active">
     <button id="slide_button" class="active">Restart Story</button>
   </div>
@@ -28,21 +26,20 @@
 <div id="map"></div>
 
 <div id="markerinfo">
-    <!-- Open and close sidebar - restart story on hosted site - CUSTOMIZE -->
+    <!-- If sidebar closed, restart story on hosted site - ADD YOUR OWN LINK -->
     <div id="sidebarbuttoncontainer">
-        <a href="http://jackdougherty.github.com/leaflet-storymap.html#" id="sidebarbutton" title="Close sidebar">X</a>
+        <a href="http://jackdougherty.github.com/leaflet-storymap/index.html" id="sidebarbutton" title="Close sidebar">X</a>
     </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://jackdougherty.github.com/leaflet-storymap.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://jackdougherty.github.com/leaflet-storymap/index.html" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
 
-// TESTING for geojson layer uploads
-//Access Token from jackdougherty account
-L.mapbox.accessToken = 'pk.eyJ1IjoiamFja2RvdWdoZXJ0eSIsImEiOiJxMi11TGlzIn0.ydUTGpMKcADi7fKPxy0GVA';
+  //Currently requires Mapbox Access Token (from jackdougherty - insert your own)
+  L.mapbox.accessToken = 'pk.eyJ1IjoiamFja2RvdWdoZXJ0eSIsImEiOiJxMi11TGlzIn0.ydUTGpMKcADi7fKPxy0GVA';
 
-//set up and center map FIX why this does not override opening
-var map = L.map('map').setView([41.76, -72.69], 12);
+  //set up map; see center and zoom level in slide0
+  var map = L.map('map');
 
   // can revert  to light_nolabels if inserting a different label overlay
   new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -53,181 +50,177 @@ var map = L.map('map').setView([41.76, -72.69], 12);
   map.attributionControl
   .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-storymap">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
-/** Sidebar control **/
-var sidebarbutton = document.getElementById('sidebarbutton');
-var body = document.getElementById('storybody');
-sidebarbutton.onclick = function() {
-    body.className = 'nosidebar';
-    buttoncontainer.className = '';
-    if(mapLayers[0]) {
-          map.removeLayer(mapLayers[0]);
-          mapLayers.splice(0,1);
-        }
-}
-/** End of sidebar control **/
+  /** Sidebar control **/
+  var sidebarbutton = document.getElementById('sidebarbutton');
+  var body = document.getElementById('storybody');
+  sidebarbutton.onclick = function() {
+      body.className = 'nosidebar';
+      buttoncontainer.className = '';
+      if(mapLayers[0]) {
+            map.removeLayer(mapLayers[0]);
+            mapLayers.splice(0,1);
+          }
+  }
+  /** End of sidebar control **/
 
+  //Array to hold the layers for each slide in the story
+  var mapLayers = new Array();
 
-//Array to hold the layers for each slide in the story
-var mapLayers = new Array();
+  //Used to restart the story if user closes the sidebar
+  slide_button.onclick = function() {
+    slide_button.className = 'active';
+    buttoncontainer.className = 'active';
+    startStory(allSlides, 0, 5)
+  }
 
-// //Used to restart the story if user closes the sidebar
-// slide_button.onclick = function() {
-//   slide_button.className = 'active';
-//   buttoncontainer.className = 'active';
-//   startStory(allSlides, 0, 4)
-// }
+  // This keeps track of our progress through the story.
+  var storyProgress = new Object();
 
-// This keeps track of our progress through the story.
-var storyProgress = new Object();
+  var startStory = function(storySlides, start, finish) {
+    current = storySlides[start];
+    storyProgress.markers = storySlides
+    storyProgress.progress = start;
+    storyProgress.beginning = start;
+    storyProgress.end = finish;
+    slideZoom(current);
+  }
 
-var startStory = function(storySlides, start, finish) {
-  current = storySlides[start];
-  storyProgress.markers = storySlides
-  storyProgress.progress = start;
-  storyProgress.beginning = start;
-  storyProgress.end = finish;
-  slideZoom(current);
-}
+  function slideParam(slideContent, lati, longi, zoomStory, slideLayer, slideNumber, layerType) {
+      this.slideContent = slideContent;
+      this.zoomStory = zoomStory;
+      this.slideLayer = slideLayer;
+      this.lati = lati;
+      this.longi = longi;
+      this.slideNumber = slideNumber;
+      this.layerType = layerType;
+  }
 
-function slideParam(slideContent, lati, longi, zoomStory, slideLayer, slideNumber, layerType) {
-    this.slideContent = slideContent;
-    this.zoomStory = zoomStory;
-    this.slideLayer = slideLayer;
-    this.lati = lati;
-    this.longi = longi;
-    this.slideNumber = slideNumber;
-    this.layerType = layerType;
-}
+  function slideZoom(current) {
+      map.setView(new L.LatLng(current.lati, current.longi), current.zoomStory);
+      if(mapLayers[0]) {
+            map.removeLayer(mapLayers[0]);
+            mapLayers.splice(0,1);
+          }
+      if(current.layerType=="none") {
+        console.log("none");
+      }
+      // loads geojson from local directory, but requires L.mapbox.featureLayer and access code
+      // see unsuccess attempts to replace this code below
+      if(current.layerType=="geoj") {
+        var gLayer = L.mapbox.featureLayer()
+          .loadURL(current.slideLayer)
+          .addTo(map);
+        mapLayers.push(gLayer);
+      }
+      // TESTING replacement: variation on using L.geoJson with var = data in local js file; hence geov
+      if(current.layerType=="geov") {
+        var gLayer = L.geoJson(current.slideLayer).addTo(map);
+        mapLayers.push(gLayer);
+      }
+      // Unsuccessful L.mapbox.featureLayer replacement using L.geoJson with var = data in local js file
+      // if(current.layerType=="geoj") {
+      //   var gLayer = L.geoJson(data)
+      //     .loadURL(current.slideLayer)
+      //     .addTo(map);
+      //   mapLayers.push(gLayer);
+      // }
+      // Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
+      // if(current.layerType=="geoj") {
+      //   var gLayer = omnivore.geojson()
+      //     .loadURL(current.slideLayer)
+      //     .addTo(map);
+      //   mapLayers.push(gLayer);
+      // }
+      // Another Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
+      // if(current.layerType=="geoj") {
+      //     var gLayer = omnivore.geoJson(current.sliderLayer)
+      //       .addTo(map);
+      //     mapLayers.push(gLayer);
+      // }
+      // rewrote as L.tileLayer http://leafletjs.com/reference.html#tilelayer
+      if(current.layerType=="tile") {
+          var tLayer = L.tileLayer(current.slideLayer).addTo(map);
+          mapLayers.push(tLayer);
+      }
+      slideDisplay(current);
+  };
 
-function slideZoom(current) {
-    map.setView(new L.LatLng(current.lati, current.longi), current.zoomStory);
-    if(mapLayers[0]) {
-          map.removeLayer(mapLayers[0]);
-          mapLayers.splice(0,1);
-        }
-    if(current.layerType=="none") {
-      console.log("none");
-    }
-    // loads geojson from local directory, but requires L.mapbox.featureLayer and access code
-    // see unsuccess attempts to replace this code below
-    if(current.layerType=="geoj") {
-      var gLayer = L.mapbox.featureLayer()
-        .loadURL(current.slideLayer)
-        .addTo(map);
-      mapLayers.push(gLayer);
-    }
-    // TESTING replacement: variation on using L.geoJson with var = data in local js file; hence geov
-    if(current.layerType=="geov") {
-      var gLayer = L.geoJson(current.slideLayer).addTo(map);
-      mapLayers.push(gLayer);
-    }
-    // Unsuccessful L.mapbox.featureLayer replacement using L.geoJson with var = data in local js file
-    // if(current.layerType=="geoj") {
-    //   var gLayer = L.geoJson(data)
-    //     .loadURL(current.slideLayer)
-    //     .addTo(map);
-    //   mapLayers.push(gLayer);
-    // }
-    // Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
-    // if(current.layerType=="geoj") {
-    //   var gLayer = omnivore.geojson()
-    //     .loadURL(current.slideLayer)
-    //     .addTo(map);
-    //   mapLayers.push(gLayer);
-    // }
-    // Another Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
-    // if(current.layerType=="geoj") {
-    //     var gLayer = omnivore.geoJson(current.sliderLayer)
-    //       .addTo(map);
-    //     mapLayers.push(gLayer);
-    // }
-    // rewrote as L.tileLayer http://leafletjs.com/reference.html#tilelayer
-    if(current.layerType=="tile") {
-        var tLayer = L.tileLayer(current.slideLayer).addTo(map);
-        mapLayers.push(tLayer);
-    }
-    slideDisplay(current);
-};
+  var slideDisplay = function(current){
+      if (current.slideNumber == 0) {
+          var info = '<div class="cycle">' +
+              '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
+      }
+      else if (current.slideNumber == 99) {
+          var info ='<div class="cycle">' +
+              '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' + '</div>' + current.slideContent;
+      }
+      else {
+          var info = '<div class="cycle">' + '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' +
+              '<a href="#" class="next" onclick="next()">NEXT >></a>' + '</div>' + current.slideContent;
+      }
 
-var slideDisplay = function(current){
-    if (current.slideNumber == 0) {
-        var info = '<div class="cycle">' +
-            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
-    }
-    else if (current.slideNumber == 99) {
-        var info ='<div class="cycle">' +
-            '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' + '</div>' + current.slideContent;
-    }
-    else {
-        var info = '<div class="cycle">' + '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' +
-            '<a href="#" class="next" onclick="next()">NEXT >></a>' + '</div>' + current.slideContent;
-    }
+      document.getElementById('markerinfo2').innerHTML = info;
+          // Re-open the sidebar if it's hidden
+          // FIX LATER - Uncaught TypeError: Cannot set property 'classname' of null
+      body.className = '';
+  }
 
-    document.getElementById('markerinfo2').innerHTML = info;
-        // Re-open the sidebar if it's hidden
-        // FIX LATER - Uncaught TypeError: Cannot set property 'classname' of null
-    body.className = '';
-}
+  // Next - get the progress from storyProgress, update the current value, and update the display.
+  function next() {
+      if (storyProgress.progress < storyProgress.end - 1) {
+          storyProgress.progress = storyProgress.progress + 1;
+          slideZoom(storyProgress.markers[storyProgress.progress]);
+      }
+      else if (storyProgress.progress = storyProgress.end - 1) {
+          storyProgress.progress = storyProgress.progress + 1;
+          slideZoom(storyProgress.markers[storyProgress.progress]);
+      }
+      else if (storyProgress.progress = storyProgress.end) {
+          storyProgress.progress = storyProgress.progress;
+      }
+      else {
+          storyProgress.progress = storyProgress.beginning;
+          slideZoom(storyProgress.markers[storyProgress.progress]);
+      }
+      console.log(storyProgress.progress);
+  }
 
-// Next - get the progress from storyProgress, update the current value, and update the display.
-function next() {
-    if (storyProgress.progress < storyProgress.end - 1) {
-        storyProgress.progress = storyProgress.progress + 1;
-        slideZoom(storyProgress.markers[storyProgress.progress]);
-    }
-    else if (storyProgress.progress = storyProgress.end - 1) {
-        storyProgress.progress = storyProgress.progress + 1;
-        slideZoom(storyProgress.markers[storyProgress.progress]);
-    }
-    else if (storyProgress.progress = storyProgress.end) {
-        storyProgress.progress = storyProgress.progress;
-    }
-    else {
-        storyProgress.progress = storyProgress.beginning;
-        slideZoom(storyProgress.markers[storyProgress.progress]);
-    }
-    console.log(storyProgress.progress);
-}
+  function prev() {
+     if (storyProgress.progress > storyProgress.beginning & storyProgress.progress < storyProgress.end) {
+          storyProgress.progress = storyProgress.progress - 1;
+          slideZoom(storyProgress.markers[storyProgress.progress]);
+      }
+      else if (storyProgress.progress = storyProgress.beginning) {
+          storyProgress.progress = storyProgress.progress;
+          //center(storyProgress.markers[storyProgress.progress]);
+      }
+      else if (storyProgress.progress = storyProgress.end) {
+          storyProgress.progress = storyProgress.end - 1;
+          slideZoom(storyProgress.markers[storyProgress.progress]);
+      }
+      console.log(storyProgress);
+  }
 
-function prev() {
-   if (storyProgress.progress > storyProgress.beginning & storyProgress.progress < storyProgress.end) {
-        storyProgress.progress = storyProgress.progress - 1;
-        slideZoom(storyProgress.markers[storyProgress.progress]);
-    }
-    else if (storyProgress.progress = storyProgress.beginning) {
-        storyProgress.progress = storyProgress.progress;
-        //center(storyProgress.markers[storyProgress.progress]);
-    }
-    else if (storyProgress.progress = storyProgress.end) {
-        storyProgress.progress = storyProgress.end - 1;
-        slideZoom(storyProgress.markers[storyProgress.progress]);
-    }
-    console.log(storyProgress);
-}
+  // Create an HTML file and associated entry to display text of each slide
+  var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
 
+  // Create a variable for each slide. To omit slideLayer spatial content, use empty quote marks ""
+  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/borders1869.geojson", 0, "geoj");
+  var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geoj");
+  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geoj");
+  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geoj");
+  var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
+  var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
-// Add content for the story
+  // Create an entry for each slide
+  var allSlides = [slide0, slide1, slide2, slide3, slide4, slide5];
 
-var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
+  // The numbers below must correspond to your range of slides (0 to 5, etc.)
+  slide_button.className = 'active';
+  buttoncontainer.className = 'active';
+  startStory(allSlides, 0, 5)
 
-var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/borders1869.geojson", 0, "geoj");
-var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geoj");
-var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geoj");
-var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geoj");
-var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
-var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
+  </script>
 
-var allSlides = [slide0, slide1, slide2, slide3, slide4, slide5];
-
-slide_button.className = 'active';
-buttoncontainer.className = 'active';
-startStory(allSlides, 0, 5)
-
-
-</script>
-
-<!-- Removed - fix later
-<iframe id="rdbIndicator" width="100%" height="270" border="0" src="indicator.html" style="display: none; border: 0; position: fixed; left: 0; top: 0; z-index: 2147483647"></iframe>
-fix later -->
 </body>
 </html>

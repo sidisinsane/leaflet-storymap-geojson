@@ -5,6 +5,8 @@ a Leaflet storymap template with slides that add text, geojson, and tile layers
 http://jackdougherty.github.io/leaflet-storymap
 
 ## To Do
+- Remove banner, move sidebar up to top-right corner, and expand length only as needed?
+Remove button that closes sidebar, but keep template intact
 - Currently requires L.mapbox.featurelayer (and MapBox account token) to display geojson, even when these files are stored on local directory
 - Try to replace with L.geoJson or Leaflet-Omnivore (https://github.com/mapbox/leaflet-omnivore), which can process many types of spatial data (geojson, kml, polyline, etc.)
 - Try to rewrite code to display multiple spatial layers on same slide (e.g. a geoJson and a tile layer)
