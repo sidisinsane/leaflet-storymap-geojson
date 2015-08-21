@@ -12,10 +12,11 @@
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 <!-- load from local directory -->
 <script src="leaflet-omnivore.min.js"></script>
-<script src="content/borders1869.geojson"></script>
-<script src="content/1869.js"></script>
-<script src="content/test.geojson"></script>
-<script src="content/data.js"></script>
+<!-- decide if I need to do this  -->
+<script src="slides/borders1869.geojson"></script>
+<script src="slides/1869.js"></script>
+<script src="slides/test.geojson"></script>
+<script src="slides/data.js"></script>
 <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -36,7 +37,7 @@
     <div id="sidebarbuttoncontainer">
         <a href="http://maps.edbuild.org/DividingLines.html#" id="sidebarbutton" title="Close sidebar">X</a>
     </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slideText0.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
@@ -156,7 +157,7 @@ function slideZoom(current) {
 var slideDisplay = function(current){
     if (current.slideNumber == 1) {
         var info = '<div class="cycle">' +
-            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slideText0.html" id="iframe" frameborder="0"></iframe>';
+            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
     }
     else if (current.slideNumber == 99) {
         var info ='<div class="cycle">' +
@@ -212,13 +213,13 @@ function prev() {
 
 // Add content for the story
 
-var slideContent = ['<iframe src="slideText0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>'];
+var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
 
 var slide0 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 0, "none");
-var slide1 = new slideParam(slideContent[1], 41.68, -72.73, 11, "content/borders1869.geojson", 1, "geoj");
-var slide2 = new slideParam(slideContent[2], 41.87, -72.85, 9, "content/test.geojson", 2, "geoj");
-var slide3 = new slideParam(slideContent[3], 41.76, -72.67, 10, "content/1869.js", 3,  "geov"); // TESTING
-var slide4 = new slideParam(slideContent[4], 41.68, -72.73, 9, "content/data.js", 4, "geoj");
+var slide1 = new slideParam(slideContent[1], 41.68, -72.73, 11, "slides/borders1869.geojson", 1, "geoj");
+var slide2 = new slideParam(slideContent[2], 41.87, -72.85, 9, "slides/test.geojson", 2, "geoj");
+var slide3 = new slideParam(slideContent[3], 41.76, -72.67, 10, "slides/1869.js", 3,  "geov"); // TESTING
+var slide4 = new slideParam(slideContent[4], 41.68, -72.73, 9, "slides/data.js", 4, "geoj");
 var slide5 = new slideParam(slideContent[5], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
 
 
