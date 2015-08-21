@@ -7,7 +7,11 @@
 <script src="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>
+<!-- if using Mapbox account -->
+<script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 <!-- load from local directory -->
+<script src="leaflet-omnivore.min.js"></script>
 <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -32,6 +36,10 @@
 </div>
 
 <script>
+
+// TESTING for geojson layer uploads
+//Access Token from jackdougherty account
+L.mapbox.accessToken = 'pk.eyJ1IjoiamFja2RvdWdoZXJ0eSIsImEiOiJxMi11TGlzIn0.ydUTGpMKcADi7fKPxy0GVA';
 
 //set up and center map FIX why this does not override opening
 var map = L.map('map').setView([41.76, -72.69], 12);
@@ -100,14 +108,22 @@ function slideZoom(current) {
     if(current.layerType=="none") {
       console.log("none");
     }
+    // loads geojson from Mapbox account
     if(current.layerType=="geoj") {
-        var gLayer = L.mapbox.featureLayer()
-          .loadURL(current.slideLayer)
-          .addTo(map);
-        mapLayers.push(gLayer);
+      var gLayer = L.mapbox.featureLayer()
+        .loadURL(current.slideLayer)
+        .addTo(map);
+      mapLayers.push(gLayer);
     }
+    // TESTING  geoJson using leaflet-omnivore; in future can add kml, polyline, etc.
+    // if(current.layerType=="geoj") {
+    //     var gLayer = omnivore.geoJson(current.sliderLayer)
+    //       .addTo(map);
+    //     mapLayers.push(gLayer);
+    // }
+    // rewrote as L.tileLayer http://leafletjs.com/reference.html#tilelayer
     if(current.layerType=="tile") {
-        var tLayer = L.mapbox.tileLayer(current.slideLayer).addTo(map);
+        var tLayer = L.tileLayer(current.slideLayer).addTo(map);
         mapLayers.push(tLayer);
     }
     slideDisplay(current);
@@ -175,8 +191,8 @@ function prev() {
 var slideContent = ['<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText5.html" id="iframe" frameborder="0"></iframe>'];
 
 var slide1 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 1, "none");
-var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "edbuild.Ansley_Nebraska", 2, "tile");
-var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "Camden2.geojson", 3, "geoj");
+var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "jackdougherty.kpig4x6r", 2, "geoj");
+var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "content/borders1869.geojson", 3, "geoj");
 var slide4 = new slideParam(slideContent[3], 41.637531, -83.623383, 11, "edbuild.Toledo2", 4,  "tile");
 var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
 
