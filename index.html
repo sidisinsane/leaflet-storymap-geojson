@@ -12,6 +12,10 @@
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 <!-- load from local directory -->
 <script src="leaflet-omnivore.min.js"></script>
+<script src="content/borders1869.geojson"></script>
+<script src="content/1869.js"></script>
+<script src="content/test.geojson"></script>
+<script src="content/data.js"></script>
 <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -32,7 +36,7 @@
     <div id="sidebarbuttoncontainer">
         <a href="http://maps.edbuild.org/DividingLines.html#" id="sidebarbutton" title="Close sidebar">X</a>
     </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slideText1.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slideText0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
@@ -108,28 +112,34 @@ function slideZoom(current) {
     if(current.layerType=="none") {
       console.log("none");
     }
-    // loads geojson from Mapbox account
+    // loads geojson from local directory, but requires L.mapbox.featureLayer and access code
+    // see unsuccess attempts to replace this code below
     if(current.layerType=="geoj") {
       var gLayer = L.mapbox.featureLayer()
         .loadURL(current.slideLayer)
         .addTo(map);
       mapLayers.push(gLayer);
     }
-    // TESTING load of local geojson declared as var, hence geov
+    // TESTING replacement: variation on using L.geoJson with var = data in local js file; hence geov
     if(current.layerType=="geov") {
-      var gLayer = L.geoJson(data)
-        .loadURL(current.slideLayer)
-        .addTo(map);
+      var gLayer = L.geoJson(current.slideLayer).addTo(map);
       mapLayers.push(gLayer);
     }
-    // UNSUCCESSFUL loading of file in local development
-    // if(current.layerType=="geok") {
+    // Unsuccessful L.mapbox.featureLayer replacement using L.geoJson with var = data in local js file
+    // if(current.layerType=="geoj") {
+    //   var gLayer = L.geoJson(data)
+    //     .loadURL(current.slideLayer)
+    //     .addTo(map);
+    //   mapLayers.push(gLayer);
+    // }
+    // Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
+    // if(current.layerType=="geoj") {
     //   var gLayer = omnivore.geojson()
     //     .loadURL(current.slideLayer)
     //     .addTo(map);
     //   mapLayers.push(gLayer);
     // }
-    // UNSUCCESSFUL  geoJson using leaflet-omnivore; in future can add kml, polyline, etc.
+    // Another Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
     // if(current.layerType=="geoj") {
     //     var gLayer = omnivore.geoJson(current.sliderLayer)
     //       .addTo(map);
@@ -146,7 +156,7 @@ function slideZoom(current) {
 var slideDisplay = function(current){
     if (current.slideNumber == 1) {
         var info = '<div class="cycle">' +
-            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>';
+            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slideText0.html" id="iframe" frameborder="0"></iframe>';
     }
     else if (current.slideNumber == 99) {
         var info ='<div class="cycle">' +
@@ -202,21 +212,21 @@ function prev() {
 
 // Add content for the story
 
-var slideContent = ['<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText5.html" id="iframe" frameborder="0"></iframe>'];
+var slideContent = ['<iframe src="slideText0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>'];
 
-var slide1 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 1, "none");
-var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "content/borders1869.geojson", 2, "geoj");
-var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "content/test.geojson", 3, "geoj");
-var slide4 = new slideParam(slideContent[3], 41.76, -72.67, 10, "content/1869.js", 4,  "geov"); // TESTING
-var slide5 = new slideParam(slideContent[4], 41.68, -72.73, 9, "jackdougherty.kpig4x6r", 99, "geoj");
-// var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
+var slide0 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 0, "none");
+var slide1 = new slideParam(slideContent[1], 41.68, -72.73, 11, "content/borders1869.geojson", 1, "geoj");
+var slide2 = new slideParam(slideContent[2], 41.87, -72.85, 9, "content/test.geojson", 2, "geoj");
+var slide3 = new slideParam(slideContent[3], 41.76, -72.67, 10, "content/1869.js", 3,  "geov"); // TESTING
+var slide4 = new slideParam(slideContent[4], 41.68, -72.73, 9, "content/data.js", 4, "geoj");
+var slide5 = new slideParam(slideContent[5], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
 
 
-var allSlides = [slide1, slide2, slide3, slide4, slide5];
+var allSlides = [slide0, slide1, slide2, slide3, slide4, slide5];
 
 slide_button.className = 'active';
 buttoncontainer.className = 'active';
-startStory(allSlides, 0, 4)
+startStory(allSlides, 0, 5)
 
 
 </script>

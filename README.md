@@ -4,8 +4,9 @@ creating a skeleton Leaflet storymap with slides that add new text, geojson, and
 ## Demo
 http://jackdougherty.github.io/leaflet-storymap
 
-Dependency:
-- Leaflet-Omnivore (https://github.com/mapbox/leaflet-omnivore) stored in local directory to easily process many spatial data file types
+## Testing Dependencies:
+
+L.mapbox.featurelayer (requires account token) vs. Leaflet-Omnivore (https://github.com/mapbox/leaflet-omnivore) stored in local directory to easily process many spatial data file types
 
 ```
 var map = L.mapbox.map('map', 'mapbox.streets')
