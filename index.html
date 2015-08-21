@@ -14,7 +14,7 @@
 
 <div id="banner">
   <!-- <a href="http://www.edbuild.org/"><img style="vertical-align:top" src="logo_inverse_262x160.png" id="logo"></a> -->
-  <h3>Leaflet StoryMap skeleton (credit: EdBuild)</h3>
+  <h3>Leaflet StoryMap framework (credit: EdBuild)</h3>
   <!-- <a href="http://edbuild.org/blog/" id="blog_button">Blog</a> -->
   <div id="buttoncontainer" class="active">
     <button id="slide_button" class="active">Restart Story</button>
@@ -24,26 +24,26 @@
 <div id="map"></div>
 
 <div id="markerinfo">
-    <!-- Open and close sidebar - LATER, repoint the href to slide host site -->
+    <!-- Open and close sidebar - FIX and perhaps repoint the href to slide host site -->
     <div id="sidebarbuttoncontainer">
         <a href="http://maps.edbuild.org/DividingLines.html#" id="sidebarbutton" title="Close sidebar">X</a>
     </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slideText1.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
 
-//set up and center map; can add more controls
-var map = L.map('map').setView([41.76, -72.69], 9);
+//set up and center map FIX why this does not override opening
+var map = L.map('map').setView([41.76, -72.69], 12);
 
   // can revert  to light_nolabels if inserting a different label overlay
   new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
   		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 	}).addTo(map);
 
-  // customize source link to your GitHub repo ** DO THIS LATER **
+  // customize source link to your GitHub repo
   map.attributionControl
-  .setPrefix('View <a href="http://github.com/jackdougherty/otl-historical-town-school-lines">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+  .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-storymap">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
 /** Sidebar control **/
 var sidebarbutton = document.getElementById('sidebarbutton');
@@ -116,7 +116,7 @@ function slideZoom(current) {
 var slideDisplay = function(current){
     if (current.slideNumber == 1) {
         var info = '<div class="cycle">' +
-            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe>';
+            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>';
     }
     else if (current.slideNumber == 99) {
         var info ='<div class="cycle">' +
@@ -172,11 +172,11 @@ function prev() {
 
 // Add content for the story
 
-var slideContent = ['<iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="2_Nebraska.html" id="iframe" frameborder="0"></iframe>', '<iframe src="3_Camden.html" id="iframe" frameborder="0"></iframe>', '<iframe src="4_Toledo.html" id="iframe" frameborder="0"></iframe>', '<iframe src="5_Discussion2.html" id="iframe" frameborder="0"></iframe>'];
+var slideContent = ['<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText5.html" id="iframe" frameborder="0"></iframe>'];
 
-var slide1 = new slideParam(slideContent[0], 35.032980, -86.934064, 4, "", 1, "none");
-var slide2 = new slideParam(slideContent[1], 41.276790, -99.326859, 10, "edbuild.Ansley_Nebraska", 2, "tile");
-var slide3 = new slideParam(slideContent[2], 39.903919, -75.029825, 11, "Camden2.geojson", 3, "geoj");
+var slide1 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 1, "none");
+var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "edbuild.Ansley_Nebraska", 2, "tile");
+var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "Camden2.geojson", 3, "geoj");
 var slide4 = new slideParam(slideContent[3], 41.637531, -83.623383, 11, "edbuild.Toledo2", 4,  "tile");
 var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
 
