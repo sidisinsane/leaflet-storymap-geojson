@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Leaflet Storymap</title>
+<!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.css" />
+<script src="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>
+<!-- load from local directory -->
+<link href="custom.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div id="banner">
+  <!-- <a href="http://www.edbuild.org/"><img style="vertical-align:top" src="logo_inverse_262x160.png" id="logo"></a> -->
+  <h3>Leaflet StoryMap skeleton (credit: EdBuild)</h3>
+  <!-- <a href="http://edbuild.org/blog/" id="blog_button">Blog</a> -->
+  <div id="buttoncontainer" class="active">
+    <button id="slide_button" class="active">Restart Story</button>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div id="markerinfo">
+    <!-- Open and close sidebar - LATER, repoint the href to slide host site -->
+    <div id="sidebarbuttoncontainer">
+        <a href="http://maps.edbuild.org/DividingLines.html#" id="sidebarbutton" title="Close sidebar">X</a>
+    </div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe></div>
+</div>
+
+<script>
+
+//set up and center map; can add more controls
+var map = L.map('map').setView([41.76, -72.69], 9);
+
+  // can revert  to light_nolabels if inserting a different label overlay
+  new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+  		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+	}).addTo(map);
+
+  // customize source link to your GitHub repo ** DO THIS LATER **
+  map.attributionControl
+  .setPrefix('View <a href="http://github.com/jackdougherty/otl-historical-town-school-lines">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+
+/** Sidebar control **/
+var sidebarbutton = document.getElementById('sidebarbutton');
+var body = document.getElementById('storybody');
+sidebarbutton.onclick = function() {
+    body.className = 'nosidebar';
+    buttoncontainer.className = '';
+    if(mapLayers[0]) {
+          map.removeLayer(mapLayers[0]);
+          mapLayers.splice(0,1);
+        }
+}
+/** End of sidebar control **/
+
+
+//Array to hold the layers for each slide in the story
+var mapLayers = new Array();
+
+// //Used to restart the story if user closes the sidebar
+// slide_button.onclick = function() {
+//   slide_button.className = 'active';
+//   buttoncontainer.className = 'active';
+//   startStory(allSlides, 0, 4)
+// }
+
+// This keeps track of our progress through the story.
+var storyProgress = new Object();
+
+var startStory = function(storySlides, start, finish) {
+  current = storySlides[start];
+  storyProgress.markers = storySlides
+  storyProgress.progress = start;
+  storyProgress.beginning = start;
+  storyProgress.end = finish;
+  slideZoom(current);
+}
+
+function slideParam(slideContent, lati, longi, zoomStory, slideLayer, slideNumber, layerType) {
+    this.slideContent = slideContent;
+    this.zoomStory = zoomStory;
+    this.slideLayer = slideLayer;
+    this.lati = lati;
+    this.longi = longi;
+    this.slideNumber = slideNumber;
+    this.layerType = layerType;
+}
+
+function slideZoom(current) {
+    map.setView(new L.LatLng(current.lati, current.longi), current.zoomStory);
+    if(mapLayers[0]) {
+          map.removeLayer(mapLayers[0]);
+          mapLayers.splice(0,1);
+        }
+    if(current.layerType=="none") {
+      console.log("none");
+    }
+    if(current.layerType=="geoj") {
+        var gLayer = L.mapbox.featureLayer()
+          .loadURL(current.slideLayer)
+          .addTo(map);
+        mapLayers.push(gLayer);
+    }
+    if(current.layerType=="tile") {
+        var tLayer = L.mapbox.tileLayer(current.slideLayer).addTo(map);
+        mapLayers.push(tLayer);
+    }
+    slideDisplay(current);
+};
+
+var slideDisplay = function(current){
+    if (current.slideNumber == 1) {
+        var info = '<div class="cycle">' +
+            '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe>';
+    }
+    else if (current.slideNumber == 99) {
+        var info ='<div class="cycle">' +
+            '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' + '</div>' + current.slideContent;
+    }
+    else {
+        var info = '<div class="cycle">' + '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' +
+            '<a href="#" class="next" onclick="next()">NEXT >></a>' + '</div>' + current.slideContent;
+    }
+
+    document.getElementById('markerinfo2').innerHTML = info;
+        // Re-open the sidebar if it's hidden
+        // FIX LATER - Uncaught TypeError: Cannot set property 'classname' of null
+    body.className = '';
+}
+
+// Next - get the progress from storyProgress, update the current value, and update the display.
+function next() {
+    if (storyProgress.progress < storyProgress.end - 1) {
+        storyProgress.progress = storyProgress.progress + 1;
+        slideZoom(storyProgress.markers[storyProgress.progress]);
+    }
+    else if (storyProgress.progress = storyProgress.end - 1) {
+        storyProgress.progress = storyProgress.progress + 1;
+        slideZoom(storyProgress.markers[storyProgress.progress]);
+    }
+    else if (storyProgress.progress = storyProgress.end) {
+        storyProgress.progress = storyProgress.progress;
+    }
+    else {
+        storyProgress.progress = storyProgress.beginning;
+        slideZoom(storyProgress.markers[storyProgress.progress]);
+    }
+    console.log(storyProgress.progress);
+}
+
+function prev() {
+   if (storyProgress.progress > storyProgress.beginning & storyProgress.progress < storyProgress.end) {
+        storyProgress.progress = storyProgress.progress - 1;
+        slideZoom(storyProgress.markers[storyProgress.progress]);
+    }
+    else if (storyProgress.progress = storyProgress.beginning) {
+        storyProgress.progress = storyProgress.progress;
+        //center(storyProgress.markers[storyProgress.progress]);
+    }
+    else if (storyProgress.progress = storyProgress.end) {
+        storyProgress.progress = storyProgress.end - 1;
+        slideZoom(storyProgress.markers[storyProgress.progress]);
+    }
+    console.log(storyProgress);
+}
+
+
+// Add content for the story
+
+var slideContent = ['<iframe src="1_Intro.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="2_Nebraska.html" id="iframe" frameborder="0"></iframe>', '<iframe src="3_Camden.html" id="iframe" frameborder="0"></iframe>', '<iframe src="4_Toledo.html" id="iframe" frameborder="0"></iframe>', '<iframe src="5_Discussion2.html" id="iframe" frameborder="0"></iframe>'];
+
+var slide1 = new slideParam(slideContent[0], 35.032980, -86.934064, 4, "", 1, "none");
+var slide2 = new slideParam(slideContent[1], 41.276790, -99.326859, 10, "edbuild.Ansley_Nebraska", 2, "tile");
+var slide3 = new slideParam(slideContent[2], 39.903919, -75.029825, 11, "Camden2.geojson", 3, "geoj");
+var slide4 = new slideParam(slideContent[3], 41.637531, -83.623383, 11, "edbuild.Toledo2", 4,  "tile");
+var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
+
+
+
+var allSlides = [slide1, slide2, slide3, slide4, slide5];
+
+slide_button.className = 'active';
+buttoncontainer.className = 'active';
+startStory(allSlides, 0, 4)
+
+
+</script>
+
+<!-- Removed - fix later
+<iframe id="rdbIndicator" width="100%" height="270" border="0" src="indicator.html" style="display: none; border: 0; position: fixed; left: 0; top: 0; z-index: 2147483647"></iframe>
+fix later -->
+</body>
+</html>
