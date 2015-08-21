@@ -1,39 +1,18 @@
 # leaflet-storymap
-creating a skeleton Leaflet storymap with slides that add new text, geojson, and tile layers
+a Leaflet storymap template with slides that add text, geojson, and tile layers
 
 ## Demo
 http://jackdougherty.github.io/leaflet-storymap
 
-## Testing Dependencies:
-
-L.mapbox.featurelayer (requires account token) vs. Leaflet-Omnivore (https://github.com/mapbox/leaflet-omnivore) stored in local directory to easily process many spatial data file types
-
-```
-var map = L.mapbox.map('map', 'mapbox.streets')
-    .setView([38, -102.0], 5);
-
-omnivore.csv('a.csv').addTo(map);
-omnivore.gpx('a.gpx').addTo(map);
-omnivore.kml('a.kml').addTo(map);
-omnivore.wkt('a.wkt').addTo(map);
-omnivore.topojson('a.topojson').addTo(map);
-omnivore.geojson('a.geojson').addTo(map);
-omnivore.polyline('a.txt').addTo(map);
-```
-Add custom styles to a geojson layer, which processes other types (eg kml)
-```
-var customLayer = L.geoJson(null, {
-    // http://leafletjs.com/reference.html#geojson-style
-    style: function(feature) {
-        return { color: '#f00' };
-    }
-});
-// this can be any kind of omnivore layer
-var runLayer = omnivore.kml('line.kml', null, customLayer)
-```
+## To Do
+- Currently requires L.mapbox.featurelayer (and MapBox account token) to display geojson, even when these files are stored on local directory
+- Try to replace with L.geoJson or Leaflet-Omnivore (https://github.com/mapbox/leaflet-omnivore), which can process many types of spatial data (geojson, kml, polyline, etc.)
+- Try to rewrite code to display multiple spatial layers on same slide (e.g. a geoJson and a tile layer)
+- Future option: try to rewrite code to display a floating infobox, rather than full sidebar, and change placement
 
 ## Code credits
-Adapted from
+Adapted from and inspired by
 - http://maps.edbuild.org/DividingLines.html
 - https://github.com/andrewbtran/dunkin_starbucks
+- http://github.com/CartoDB/Odyssey.js
 - https://github.com/clhenrick/BushwickCommunityMap

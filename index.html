@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<title>Leaflet Storymap</title>
+<title>Leaflet Storymap template</title>
 <!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.css" />
 <script src="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
@@ -12,18 +12,13 @@
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 <!-- load from local directory -->
 <script src="leaflet-omnivore.min.js"></script>
-<!-- decide if I need to do this  -->
-<script src="slides/borders1869.geojson"></script>
-<script src="slides/1869.js"></script>
-<script src="slides/test.geojson"></script>
-<script src="slides/data.js"></script>
 <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
 <div id="banner">
   <!-- <a href="http://www.edbuild.org/"><img style="vertical-align:top" src="logo_inverse_262x160.png" id="logo"></a> -->
-  <h3>Leaflet StoryMap framework (credit: EdBuild)</h3>
+  <h4>Leaflet StoryMap template: see <a href="http://github.com/jackdougherty/leaflet-storymap">code on GitHub and credit to EdBuild.org</a></h4>
   <!-- <a href="http://edbuild.org/blog/" id="blog_button">Blog</a> -->
   <div id="buttoncontainer" class="active">
     <button id="slide_button" class="active">Restart Story</button>
@@ -33,11 +28,11 @@
 <div id="map"></div>
 
 <div id="markerinfo">
-    <!-- Open and close sidebar - FIX and perhaps repoint the href to slide host site -->
+    <!-- Open and close sidebar - restart story on hosted site - CUSTOMIZE -->
     <div id="sidebarbuttoncontainer">
-        <a href="http://maps.edbuild.org/DividingLines.html#" id="sidebarbutton" title="Close sidebar">X</a>
+        <a href="http://jackdougherty.github.com/leaflet-storymap.html#" id="sidebarbutton" title="Close sidebar">X</a>
     </div>
-    <div id="markerinfo2"><div class="cycle"><a href="http://maps.edbuild.org/DividingLines.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="http://jackdougherty.github.com/leaflet-storymap.html#" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
@@ -155,7 +150,7 @@ function slideZoom(current) {
 };
 
 var slideDisplay = function(current){
-    if (current.slideNumber == 1) {
+    if (current.slideNumber == 0) {
         var info = '<div class="cycle">' +
             '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
     }
@@ -215,13 +210,12 @@ function prev() {
 
 var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
 
-var slide0 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 0, "none");
-var slide1 = new slideParam(slideContent[1], 41.68, -72.73, 11, "slides/borders1869.geojson", 1, "geoj");
-var slide2 = new slideParam(slideContent[2], 41.87, -72.85, 9, "slides/test.geojson", 2, "geoj");
-var slide3 = new slideParam(slideContent[3], 41.76, -72.67, 10, "slides/1869.js", 3,  "geov"); // TESTING
-var slide4 = new slideParam(slideContent[4], 41.68, -72.73, 9, "slides/data.js", 4, "geoj");
-var slide5 = new slideParam(slideContent[5], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
-
+var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/borders1869.geojson", 0, "geoj");
+var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geoj");
+var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geoj");
+var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geoj");
+var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
+var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
 var allSlides = [slide0, slide1, slide2, slide3, slide4, slide5];
 
