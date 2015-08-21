@@ -115,7 +115,21 @@ function slideZoom(current) {
         .addTo(map);
       mapLayers.push(gLayer);
     }
-    // TESTING  geoJson using leaflet-omnivore; in future can add kml, polyline, etc.
+    // TESTING load of local geojson declared as var, hence geov
+    if(current.layerType=="geov") {
+      var gLayer = L.geoJson(data)
+        .loadURL(current.slideLayer)
+        .addTo(map);
+      mapLayers.push(gLayer);
+    }
+    // UNSUCCESSFUL loading of file in local development
+    // if(current.layerType=="geok") {
+    //   var gLayer = omnivore.geojson()
+    //     .loadURL(current.slideLayer)
+    //     .addTo(map);
+    //   mapLayers.push(gLayer);
+    // }
+    // UNSUCCESSFUL  geoJson using leaflet-omnivore; in future can add kml, polyline, etc.
     // if(current.layerType=="geoj") {
     //     var gLayer = omnivore.geoJson(current.sliderLayer)
     //       .addTo(map);
@@ -191,11 +205,11 @@ function prev() {
 var slideContent = ['<iframe src="slideText1.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slideText2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slideText5.html" id="iframe" frameborder="0"></iframe>'];
 
 var slide1 = new slideParam(slideContent[0], 41.76, -72.67, 10, "", 1, "none");
-var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "jackdougherty.kpig4x6r", 2, "geoj");
-var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "content/borders1869.geojson", 3, "geoj");
-var slide4 = new slideParam(slideContent[3], 41.637531, -83.623383, 11, "edbuild.Toledo2", 4,  "tile");
-var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
-
+var slide2 = new slideParam(slideContent[1], 41.68, -72.73, 11, "content/borders1869.geojson", 2, "geoj");
+var slide3 = new slideParam(slideContent[2], 41.87, -72.85, 11, "content/test.geojson", 3, "geoj");
+var slide4 = new slideParam(slideContent[3], 41.76, -72.67, 10, "content/1869.js", 4,  "geov"); // TESTING
+var slide5 = new slideParam(slideContent[4], 41.68, -72.73, 9, "jackdougherty.kpig4x6r", 99, "geoj");
+// var slide5 = new slideParam(slideContent[4], 39.760681, -90.603497, 4, "edbuild.ConcentratedPoverty_2013", 99, "tile");
 
 
 var allSlides = [slide1, slide2, slide3, slide4, slide5];
