@@ -11,6 +11,7 @@ http://jackdougherty.github.io/leaflet-map-story
 - add round button on top of slide title to show number of slides and allow clickable (see Odyssey.js)
 - Variation: replace full sidebar with a floating info-box, ideally with automatic length adjustment, and place in bottom-right corner; test across different devices
 - Possible to display multiple spatial layers on same slide (e.g. a geoJson and a tile layer)? If not, would need to create add them on two consecutive slides and perhaps skip forward to second slide.
+- Possible to add flyTo feature in Leaflet 1.0 beta? https://groups.google.com/forum/#!msg/leaflet-js/-okp0IPm1mg/SzYsMLX5pa4J
 
 
 ## Code credits
