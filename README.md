@@ -5,7 +5,8 @@ creating a Leaflet storymap template with slides to add text, geojson, and tile 
 http://jackdougherty.github.io/leaflet-map-story
 
 ## To Do
-- Use new method to replace L.mapbox.featurelayer (and MapBox account token) with L.geoJson and global controlLayers variable
+- Use new method to replace L.mapbox.featurelayer (and MapBox account token) with L.geoJson and global controlLayers variable; set up with standard options for MAGIC 1934 and present day tile layers
+- set up option for flickr photo layer if desired
 - Remove Leaflet-Omnivore
 - Display "Back" and "Next" buttons as CSS, and place at bottom of sidebar, for easier and more consistent user interface; compare with Andrew's Dunkin Donuts model
 - add round button on top of slide title to show number of slides and allow clickable (see Odyssey.js)
