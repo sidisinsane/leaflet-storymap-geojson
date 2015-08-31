@@ -5,17 +5,13 @@
 <!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.css" />
 <script src="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>
-<!-- if using Mapbox account -->
+<!-- STILL REQUIRES Mapbox account for featurelayer to read local geojson with internal styling  -->
 <script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
-<!-- load from local directory -->
-<script src="leaflet-omnivore.min.js"></script>
 <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-
 
 <div id="map"></div>
 
@@ -25,11 +21,11 @@
 
 <script>
 
-  //Currently requires Mapbox Access Token (from jackdougherty - insert your own)
-  L.mapbox.accessToken = 'pk.eyJ1IjoiamFja2RvdWdoZXJ0eSIsImEiOiJxMi11TGlzIn0.ydUTGpMKcADi7fKPxy0GVA';
-
   //set up map; see center and zoom level in slide0
   var map = L.map('map');
+
+  //Currently requires Mapbox Access Token (from jackdougherty - insert your own)
+  L.mapbox.accessToken = 'pk.eyJ1IjoiamFja2RvdWdoZXJ0eSIsImEiOiJxMi11TGlzIn0.ydUTGpMKcADi7fKPxy0GVA';
 
   // can revert  to light_nolabels if inserting a different label overlay
   new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -40,46 +36,58 @@
   map.attributionControl
   .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-story">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
+  var controlLayers = L.control.layers( null, null, {
+    position: "bottomright", // suggested: bottomright for CT (in Long Island Sound); topleft for Hartford region
+    collapsed: false // false = open by default
+  }).addTo(map);
+
   //TESTING Flickr photo overlay (items display, but button is not working)
   //Use Flickr API explorer to obtain correct endpoint and insert your own API key
   //Photos.search currently works, but error with photosets.getPhotos
   //https://www.flickr.com/services/api/explore/flickr.photos.search
   //https://www.flickr.com/services/api/explore/flickr.photosets.getPhotos
 
-  var flickrURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=25dcc9a8c7410551dcb0af48c778bde5&user_id=56513965%40N06&tags=bikemap&extras=geo%2Curl_t%2Curl_m%2Ctitle&format=json&nojsoncallback=1";
-  //This returns error
-  //var flickrURL = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=25dcc9a8c7410551dcb0af48c778bde5&photoset_id=72157646371103550&extras=geo%2Curl_t%2Curl_m&format=json&nojsoncallback=1";
+  // Flickr photo overlay from remote JSON API feed, such as all Flickr public photos OR only from your account
+  // Obtain and insert your own flickr API key
+  // https://www.flickr.com/services/apps/create/
+  // Use Flickr API explorer to obtain correct endpoint
+  // https://www.flickr.com/services/api/explore/?method=flickr.photos.search
+  // Example shows photos.search of georeferenced images using keyword tags
+  // https://www.flickr.com/services/api/explore/flickr.photos.search
+
+  // Define flickrURL endpoint with API explorer: insert your key, and tags= or text= to filter results
+  var flickrURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=25dcc9a8c7410551dcb0af48c778bde5&user_id=56513965%40N06&tags=bikemap&extras=geo%2Curl_t%2Curl_s%2Curl_m%2Ctitle&format=json&nojsoncallback=1";
+
+  // Define the flickr popup display
+  // ** TO DO: Rewrite link to view original source photo directly on Flickr
+  // ** POSSIBLY include this code directly in the functions below for easier sequencing by novices
   var popupHTML = function(photo){
     var result = "";
-                result = '<strong>'+photo.title+'</strong><br>';
-                result += '<a href="'+photo.url_m+'" target="_blank">';
-                result += '<img src="'+photo.url_t+'"></a>';      //can change to url_m if desired, but frame needs work
-                result += '<p><small>click to enlarge</small></p>';
-                return result;
+        result = '<strong>'+photo.title+'</strong><br>';
+        result += '<a href="'+photo.url_m+'" target="_blank">';
+        result += '<img src="'+photo.url_s+'"></a>';      //was url_t; want url_s; can change to url_m if desired, but frame needs work
+        result += '<small>click image to enlarge in new tab</small>';
+        return result;
   }
-  // TEST #1 trying to modify this $.ajax flickr function that originally worked in bikemapcode
-  $.ajax({
-    url: flickrURL,
-    dataType: 'json',
-    success: function(data){
-      for (var i = 0; i < data.photos.photo.length; i++){
-        var photo_obj = data.photos.photo[i];
-        var photo_icon = L.icon(
-          {iconUrl: photo_obj.url_t,
-          iconSize: [photo_obj.width_t * 0.5, photo_obj.height_t * 0.5]}  //reduces thumbnails 50%
-        );
-
-        var flickrPhotos = new L.marker([photo_obj.latitude, photo_obj.longitude], {icon: photo_icon})
-        .bindPopup(popupHTML(photo_obj)).addTo(map);
-      }
+  // Load photos from flickr JSON (insert your flickrURL above), display with clickable photo thumbnails
+  $.getJSON(flickrURL, function (data) {
+    // Create new layerGroup for the markers, with option to append ".addTo(map);" to display by default
+    var layerGroup = new L.LayerGroup();
+    // Add layerGroup to your layer control and insert your label to appear in legend
+    controlLayers.addOverlay(layerGroup, 'Flickr photo thumbnail icons');
+    // Start a loop to insert flickr photo data into photoContent
+    for (var i = 0; i < data.photos.photo.length; i++) {
+      var photoContent = data.photos.photo[i];
+      var photoIcon = L.icon(
+        {iconUrl: photoContent.url_t,
+        iconSize: [photoContent.width_t * 0.5, photoContent.height_t * 0.5]}  //reduces thumbnails 50%
+      );
+      var marker = new L.marker([photoContent.latitude, photoContent.longitude], {icon: photoIcon});
+      marker.bindPopup(popupHTML(photoContent));
+      // Add the marker to the layerGroup
+      marker.addTo(layerGroup);
     }
   });
-
-
-
-
-
-
 
   //Array to hold the layers for each slide in the story
   var mapLayers = new Array();
@@ -115,39 +123,46 @@
       if(current.layerType=="none") {
         console.log("none");
       }
-      // loads geojson from local directory, but requires L.mapbox.featureLayer and access code
-      // see unsuccess attempts to replace this code below
-      if(current.layerType=="geoj") {
-        var gLayer = L.mapbox.featureLayer()
+      // Requires Mapbox to load and read geojson from local directory as a L.mapbox.featureLayer with internal styling
+      // *TO DO* replace this with regular Leaflet code, if possible -- see below
+      if(current.layerType=="geof") {
+        var fLayer = L.mapbox.featureLayer()
           .loadURL(current.slideLayer)
           .addTo(map);
-        mapLayers.push(gLayer);
+        mapLayers.push(fLayer);
       }
-      // TESTING replacement: variation on using L.geoJson with var = data in local js file; hence geov
-      if(current.layerType=="geov") {
-        var gLayer = L.geoJson(current.slideLayer).addTo(map);
-        mapLayers.push(gLayer);
+      // STILL TESTING version with clickable features
+      // if(current.layerType=="geof") {
+      //   var fLayer = L.mapbox.featureLayer(current.sliderLayer, {
+      //     onEachFeature: function( feature, layer) {
+      //        layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
+      //     }
+      //   }).addTo(map);
+      //   mapLayers.push(fLayer);
+      // }
+
+      // TESTING replacement for Mapbox feature layer above
+      // load polygon data with clickable features from local directory
+      if(current.LayerType=="geoj") {
+        $.getJSON(current.slideLayer, function (data) {
+          var gLayer = L.geoJson(data, {
+            // style: function (feature) {
+            //   return {
+            //     'color': 'red',
+            //     'weight': 2,
+            //     'fillColor': '#fff',
+            //     'fillOpacity': 0.2
+            //   }
+            // },
+            // onEachFeature: function( feature, layer) {
+            //   layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
+            // }
+          }).addTo(map);  // insert ".addTo(map)" to display layer by default
+          // controlLayers.addOverlay(geoJsonLayer, 'Polygons (CT towns)');  // insert your 'Title' to add to legend
+          mapLayers.push(gLayer);
+        });
       }
-      // Unsuccessful L.mapbox.featureLayer replacement using L.geoJson with var = data in local js file
-      // if(current.layerType=="geoj") {
-      //   var gLayer = L.geoJson(data)
-      //     .loadURL(current.slideLayer)
-      //     .addTo(map);
-      //   mapLayers.push(gLayer);
-      // }
-      // Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
-      // if(current.layerType=="geoj") {
-      //   var gLayer = omnivore.geojson()
-      //     .loadURL(current.slideLayer)
-      //     .addTo(map);
-      //   mapLayers.push(gLayer);
-      // }
-      // Another Unsuccessful L.mapbox.featureLayer replacement using Leaflet-Omnivore
-      // if(current.layerType=="geoj") {
-      //     var gLayer = omnivore.geoJson(current.sliderLayer)
-      //       .addTo(map);
-      //     mapLayers.push(gLayer);
-      // }
+
       // rewrote as L.tileLayer http://leafletjs.com/reference.html#tilelayer
       if(current.layerType=="tile") {
           var tLayer = L.tileLayer(current.slideLayer).addTo(map);
@@ -213,10 +228,10 @@
   var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
 
   // Create a variable for each slide. To omit slideLayer spatial content, use empty quote marks ""
-  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/borders1869.geojson", 0, "geoj");
-  var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geoj");
-  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geoj");
-  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geoj");
+  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/townBorderTest.geojson", 0, "geof");
+  var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geof");
+  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geof");
+  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geof");
   var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
   var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
