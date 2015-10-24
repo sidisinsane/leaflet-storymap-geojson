@@ -16,7 +16,7 @@
 <div id="map"></div>
 
 <div id="markerinfo">
-    <div id="markerinfo2"><div class="cycle"><a href="index.html" class="btn" onclick="next()">NEXT &gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
+    <div id="markerinfo2"><div class="cycle"><a href="index.html" class="next1" onclick="next()">NEXT &gt;&gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
 </div>
 
 <script>
@@ -40,6 +40,20 @@
     position: "bottomright", // suggested: bottomright for CT (in Long Island Sound); topleft for Hartford region
     collapsed: false // false = open by default
   }).addTo(map);
+
+  //TESTING Flickr photo overlay (items display, but button is not working)
+  //Use Flickr API explorer to obtain correct endpoint and insert your own API key
+  //Photos.search currently works, but error with photosets.getPhotos
+  //https://www.flickr.com/services/api/explore/flickr.photos.search
+  //https://www.flickr.com/services/api/explore/flickr.photosets.getPhotos
+
+  // Flickr photo overlay from remote JSON API feed, such as all Flickr public photos OR only from your account
+  // Obtain and insert your own flickr API key
+  // https://www.flickr.com/services/apps/create/
+  // Use Flickr API explorer to obtain correct endpoint
+  // https://www.flickr.com/services/api/explore/?method=flickr.photos.search
+  // Example shows photos.search of georeferenced images using keyword tags
+  // https://www.flickr.com/services/api/explore/flickr.photos.search
 
   // Define flickrURL endpoint with API explorer: insert your key, and tags= or text= to filter results
   var flickrURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=25dcc9a8c7410551dcb0af48c778bde5&user_id=56513965%40N06&tags=bikemap&extras=geo%2Curl_t%2Curl_s%2Curl_m%2Ctitle&format=json&nojsoncallback=1";
@@ -160,15 +174,15 @@
   var slideDisplay = function(current){
       if (current.slideNumber == 0) {
           var info = '<div class="cycle">' +
-              '<a href="#" class="btn" onclick="next()">NEXT ></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
+              '<a href="#" class="next1" onclick="next()">NEXT >></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
       }
       else if (current.slideNumber == 99) {
           var info ='<div class="cycle">' +
-              '<a href="#" class="btn" onclick="prev()">< PREVIOUS</a>' + '</div>' + current.slideContent;
+              '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' + '</div>' + current.slideContent;
       }
       else {
-          var info = '<div class="cycle">' + '<a href="#" class="btn" onclick="prev()">< PREVIOUS</a>' +
-              '<a href="#" class="btn" onclick="next()">NEXT ></a>' + '</div>' + current.slideContent;
+          var info = '<div class="cycle">' + '<a href="#" class="prev" onclick="prev()"><< PREVIOUS</a>' +
+              '<a href="#" class="next" onclick="next()">NEXT >></a>' + '</div>' + current.slideContent;
       }
 
       document.getElementById('markerinfo2').innerHTML = info;
@@ -213,7 +227,6 @@
   // Create an HTML file and associated entry to display text of each slide
   var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
 
-  // Currently, slide content ONLY appears if uploaded to live GitHub Pages site
   // Create a variable for each slide. To omit slideLayer spatial content, use empty quote marks ""
   var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/townBorderTest.geojson", 0, "geof");
   var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geof");
