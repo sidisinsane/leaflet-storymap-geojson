@@ -1,97 +1,58 @@
-body { margin:0; padding:0; }
-
-/*Goal is to expand map width to 100 % and make sidebar smaller and transparent*/
-#map { position:absolute; top:0px; bottom:0; width:74%; }
-
-
-/*Story sidebar*/
-/********************************************/
-
-/*Jack added*/
+body {
+  margin:0; padding:0;
+}
+#map {
+  position:absolute; top:0px; bottom:0; width:100%;
+}
+#story {
+  font-size:14px;
+  width:300px;  /* FIX: when narrower than 300px, auto-scroll horizontal for wide text */
+  height:90%;
+  font-family:Arial;
+  background-color:#fff;
+  background-color:rgba(255,255,255,0.7);
+  position:absolute;
+  z-index:1;
+  top:0;
+  right:0;
+  padding:8px;
+  /*overflow:auto;*/
+}
+#story h1 {
+  font-size:16px;
+}
+#story img {
+  width: 100%;
+}
+#story a {
+  text-decoration:none;
+  color:inherit;
+  font-weight:bold;
+  font-style:italic;
+}
 .btn {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0px;
-  font-family: Arial;
+  font-family: Lato;
   color: #ffffff;
   font-size: 14px;
-  background: #000000;
-  padding: 5px;
+  padding: 3px;
   text-decoration: none;
 }
-
 .btn:hover {
-  background: #606466;
+  background: #D8D8D8;
   text-decoration: none;
 }
-
-
-
-#markerinfo {
-    position: absolute; top: 0px; right: 0;
-    bottom: 0; width: 23%; background:#fff; color: #000;
-    padding: 20px;
-    border-left: 3px solid #fff;
-    font-family: 'Lato';
+.next {
+  position: absolute; right: 5px;
+}
+.prev {
+  position: absolute; left: 5px;
 }
 
-#markerinfo2 {
-    width: 120%;
-    margin-left: -8%;
-}
-
-#markerinfo2 iframe#iframe {
-    height: 555px;
-    width: 95%;
-    margin-top: 5px;
-}
-
-#markerinfo2 div.cycle {
-    margin-top: 0 px;
-    margin-left: 2%;
-}
-
-#markerinfo2 div.cycle a.next{
-    color: #3990A3;
-    height: 16px;
-    display:inline-block;
-    font-family:'Lato';
-    font-size:14px;
-    font-weight:bold;
-    text-decoration:none;
-    margin-left: 35px;
-}
-
-#markerinfo2 div.cycle a.next1{
-    color: #3990A3;
-    height: 16px;
-    display:inline-block;
-    font-family:'Lato';
-    font-size:14px;
-    font-weight:bold;
-    text-decoration:none;
-    margin-left: 50%;
-}
-
-#markerinfo2 div.cycle a.prev{
-    color: #3990A3;
-    height: 16px;
-    display:inline-block;
-    font-family:'Lato';
-    font-size:14px;
-    font-weight:bold;
-    text-decoration:none;
-}
-
-/*Styling for popup*/
-.popup {
-    text-align: center;
-}
-
-/* Styling for layer definition popups*/
 
 
+/* KEEP OR TOSS this older code? -- Styling for layer definition popups*/
 .popup{
+    text-align: center;
     position:relative;
     width:200px;
     margin-left: 265px;
@@ -103,8 +64,6 @@ body { margin:0; padding:0; }
     border:2px solid #FFF;
     z-index:100000000000000000;
     }
-
-
 div.leaflet-popup-content-wrapper {
     overflow: auto;
 }
