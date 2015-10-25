@@ -7,6 +7,7 @@ http://jackdougherty.github.io/leaflet-storymap-geojson
 ## To Do
 - Improve interface to resemble my other storymap template (which currently cannot easily display geojson objects that change with each slide) http://github.com/jackdougherty/leaflet-storymap-odyssey
   - in custom.css: FIX: when narrower than 300px, auto-scroll horizontal for wide text
+  - in custom.css: RESTORE text-decoration: underline and color: blue for links in Leaflet code attribution links at bottom of map
 - Find Leaflet substitute for L.mapbox.featurelayer (and MapBox account token), which is currently required to display geoJson internal styling (for history town lines map story); look through https://github.com/mapbox/mapbox.js
 - perhaps try creating a geojson with internal styling as a .js with declared variable?
 - make geojson feature layer clickable
