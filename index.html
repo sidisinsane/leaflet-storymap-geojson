@@ -118,32 +118,32 @@
           .addTo(map);
         mapLayers.push(fLayer);
       }
-      // STILL TESTING version with clickable features
-      // if(current.layerType=="geof") {
-      //   var fLayer = L.mapbox.featureLayer(current.sliderLayer, {
-      //     onEachFeature: function( feature, layer) {
-      //        layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
-      //     }
-      //   }).addTo(map);
-      //   mapLayers.push(fLayer);
-      // }
+      // STILL TESTING version with clickable features (aka geoc)
+      if(current.layerType=="geoc") {
+        var fLayer = L.mapbox.featureLayer(current.sliderLayer, {
+          onEachFeature: function( feature, layer) {
+             layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
+          }
+        }).addTo(map);
+        mapLayers.push(fLayer);
+      }
 
       // TESTING replacement for Mapbox feature layer above
       // load polygon data with clickable features from local directory
       if(current.LayerType=="geoj") {
         $.getJSON(current.slideLayer, function (data) {
           var gLayer = L.geoJson(data, {
-            // style: function (feature) {
-            //   return {
-            //     'color': 'red',
-            //     'weight': 2,
-            //     'fillColor': '#fff',
-            //     'fillOpacity': 0.2
-            //   }
-            // },
-            // onEachFeature: function( feature, layer) {
-            //   layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
-            // }
+            style: function (feature) {
+              return {
+                'color': 'red',
+                'weight': 2,
+                'fillColor': '#fff',
+                'fillOpacity': 0.2
+              }
+            },
+            onEachFeature: function( feature, layer) {
+              layer.bindPopup(feature.properties.Town) // change 'Town' to match your geojson property labels
+            }
           }).addTo(map);  // insert ".addTo(map)" to display layer by default
           // controlLayers.addOverlay(geoJsonLayer, 'Polygons (CT towns)');  // insert your 'Title' to add to legend
           mapLayers.push(gLayer);
@@ -216,10 +216,10 @@
   var slideContent = ['<iframe src="text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text5.html" id="iframe" frameborder="0"></iframe>'];
 
   // Create a variable for each slide. To omit slideLayer spatial content, use empty quote marks ""
-  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "src/townBorderTest.geojson", 0, "geof");
+  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "src/townBorderTest.geojson", 0, "geof"); // has properties.Town
   var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "src/hartford.geojson", 1, "geof");
-  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "src/test-markers.geojson", 2,  "geof");
-  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "test-polygon.geojson", 3, "geof");
+  var slide2 = new slideParam(slideContent[2], 41.76, -72.65, 13, "src/test-markers.geojson", 2,  "geof");
+  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "src/test-polygon.geojson", 3, "geof");
   var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
   var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
