@@ -15,8 +15,9 @@
 
 <div id="map"></div>
 
-<div id="markerinfo">
-    <div id="markerinfo2"><div class="cycle"><a href="index.html" class="btn" onclick="next()">NEXT &gt;</a></div><iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe></div>
+<div id="story">
+    <a href="index.html" class="btn next" onclick="next()">NEXT &gt;</a>
+    <iframe src="text0.html" id="iframe" frameborder="0"></iframe>
 </div>
 
 <script>
@@ -34,7 +35,7 @@
 
   // customize source link to your GitHub repo
   map.attributionControl
-  .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-story">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+  .setPrefix('View <a href="http://github.com/jackdougherty/leaflet-storymap-geojson">code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
   var controlLayers = L.control.layers( null, null, {
     position: "bottomright", // suggested: bottomright for CT (in Long Island Sound); topleft for Hartford region
@@ -160,18 +161,19 @@
   var slideDisplay = function(current){
       if (current.slideNumber == 0) {
           var info = '<div class="cycle">' +
-              '<a href="#" class="btn" onclick="next()">NEXT ></a>' + '</div>' + '<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>';
+              '<a href="#" class="btn next" onclick="next()">NEXT ></a>' + '</div>' + '<iframe src="text0.html" id="iframe" frameborder="0"></iframe>';
       }
       else if (current.slideNumber == 99) {
           var info ='<div class="cycle">' +
-              '<a href="#" class="btn" onclick="prev()">< PREVIOUS</a>' + '</div>' + current.slideContent;
+              '<a href="#" class="btn prev" onclick="prev()">< PREVIOUS</a>' + '</div>' + current.slideContent;
       }
       else {
-          var info = '<div class="cycle">' + '<a href="#" class="btn" onclick="prev()">< PREVIOUS</a>' +
-              '<a href="#" class="btn" onclick="next()">NEXT ></a>' + '</div>' + current.slideContent;
+          var info = '<div class="cycle">' + '<a href="#" class="btn prev" onclick="prev()">< PREVIOUS</a>' +
+              '<a href="#" class="btn next" onclick="next()">NEXT ></a>' + '</div>' + current.slideContent;
       }
 
-      document.getElementById('markerinfo2').innerHTML = info;
+      // unsure about this change
+      document.getElementById('story').innerHTML = info;
   }
 
   // Next - get the progress from storyProgress, update the current value, and update the display.
@@ -211,14 +213,13 @@
   }
 
   // Create an HTML file and associated entry to display text of each slide
-  var slideContent = ['<iframe src="slides/text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="slides/text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="slides/text5.html" id="iframe" frameborder="0"></iframe>'];
+  var slideContent = ['<iframe src="text0.html" id="iframe" frameborder="0"></iframe>',  '<iframe src="text1.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text2.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text3.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text4.html" id="iframe" frameborder="0"></iframe>', '<iframe src="text5.html" id="iframe" frameborder="0"></iframe>'];
 
-  // Currently, slide content ONLY appears if uploaded to live GitHub Pages site
   // Create a variable for each slide. To omit slideLayer spatial content, use empty quote marks ""
-  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "slides/townBorderTest.geojson", 0, "geof");
-  var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "slides/hartford.geojson", 1, "geof");
-  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "slides/test-markers.geojson", 2,  "geof");
-  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "slides/test-polygon.geojson", 3, "geof");
+  var slide0 = new slideParam(slideContent[0], 41.78, -72.69, 10, "src/townBorderTest.geojson", 0, "geof");
+  var slide1 = new slideParam(slideContent[1], 41.76, -72.69, 12, "src/hartford.geojson", 1, "geof");
+  var slide2 = new slideParam(slideContent[2], 41.74, -72.65, 13, "src/test-markers.geojson", 2,  "geof");
+  var slide3 = new slideParam(slideContent[3], 41.67, -72.7, 12, "test-polygon.geojson", 3, "geof");
   var slide4 = new slideParam(slideContent[4], 41.76, -72.67, 12, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 4, "tile");
   var slide5 = new slideParam(slideContent[5], 41.78, -72.7, 14, "http://mapwarper.net/maps/tile/10115/{z}/{x}/{y}.png", 99, "tile");
 
