@@ -8,9 +8,12 @@ http://jackdougherty.github.io/leaflet-storymap-geojson
 - Improve interface to resemble my other storymap template (which currently cannot easily display geojson objects that change with each slide) http://github.com/jackdougherty/leaflet-storymap-odyssey
   - in custom.css: FIX: when narrower than 300px, auto-scroll horizontal for wide text
   - in custom.css: RESTORE text-decoration: underline and color: blue for links in Leaflet code attribution links at bottom of map
-- Find Leaflet substitute for L.mapbox.featurelayer (and MapBox account token), which is currently required to display geoJson internal styling (for history town lines map story); look through https://github.com/mapbox/mapbox.js
+
+- Make geojson feature layer clickable, using either MapBox or Leaflet-only. For example, in slide 1, townBorderTest.geojson has properties.Town. See my different attempts to do this in the code
+
+- Create Leaflet-only substitute for L.mapbox.featurelayer (and MapBox account token), which is currently required to display geoJson internal styling (for history town lines map story); look through https://github.com/mapbox/mapbox.js
 - perhaps try creating a geojson with internal styling as a .js with declared variable?
-- make geojson feature layer clickable
+
 - set up with standard options for MAGIC 1934 and present day tile layers
 - Possible to display multiple spatial layers on same slide (e.g. a geoJson and a tile layer)? If not, would need to create add them on two consecutive slides and perhaps skip forward to second slide.
 - Possible to add flyTo feature in Leaflet 1.0 beta? https://groups.google.com/forum/#!msg/leaflet-js/-okp0IPm1mg/SzYsMLX5pa4J
